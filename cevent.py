@@ -1,9 +1,6 @@
 import pygame
 from pygame.locals import *
  
-import pygame
-from pygame.locals import *
- 
 class CEvent:
     def __init__(self):
         pass
@@ -24,9 +21,9 @@ class CEvent:
     def on_mouse_wheel(self, event):
         pass
     def on_lbutton_up(self, event):
-        self.on_exit(self)
+        self.on_exit()
     def on_lbutton_down(self, event):
-        self.on_exit(self)
+        pass
     def on_rbutton_up(self, event):
         pass
     def on_rbutton_down(self, event):
