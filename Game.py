@@ -10,6 +10,7 @@ Ollioules = Territory("Ollioules")
 Rouen = Territory("Rouen")
 Sanary = Territory("Sanary")
 Hyeres = Territory("Hyeres")
+Quincampoix = Territory("Quincampoix")
 
 game = Land([Toulon, Marseille, Ollioules, Rouen, Sanary, Hyeres], [Blue, Red], True, True)
 
