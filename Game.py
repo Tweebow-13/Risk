@@ -14,18 +14,6 @@ Sanary = Territory("Sanary")
 Hyeres = Territory("Hyeres")
 Quincampoix = Territory("Quincampoix")
 
-# main_dir = os.path.split(os.path.abspath(__file__))[0]
-
-# def load_image(file):
-#     """ loads an image, prepares it for play
-#     """
-#     file = os.path.join(main_dir, "data", file)
-#     try:
-#         surface = pg.image.load(file)
-#     except pg.error:
-#         raise SystemExit('Could not load image "%s" %s' % (file, pg.get_error()))
-#     return surface.convert()
-
 if __name__ == "__main__" :
     theApp = CApp()
     theApp.on_execute()
