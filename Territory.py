@@ -1,9 +1,11 @@
 class Territory:
 
-    def __init__(self, inName):
+    def __init__(self, inName, inCoord = [0,0]):
         self.name = inName
         self.army = 0
         self.ownership = None
+        self.x = inCoord[0]
+        self.y = inCoord[1]
     
     def __str__(self):
         return(str(self.name) + " : " + str(self.army) + " units")
