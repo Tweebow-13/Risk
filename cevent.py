@@ -1,7 +1,8 @@
-import pygame
+import pygame as pg
 from pygame.locals import *
- 
+
 class CEvent:
+
     def __init__(self):
         pass
     def on_input_focus(self):
@@ -21,7 +22,7 @@ class CEvent:
     def on_mouse_wheel(self, event):
         pass
     def on_lbutton_up(self, event):
-        self.on_exit()
+        print(pg.mouse.get_pos())
     def on_lbutton_down(self, event):
         pass
     def on_rbutton_up(self, event):
@@ -55,7 +56,7 @@ class CEvent:
     def on_joy_ball(self,event):
         pass
 
-    def on_event(self, event):
+    def on_event(self, event, screen, text_surface):
         if event.type == QUIT:
             self.on_exit()
  
