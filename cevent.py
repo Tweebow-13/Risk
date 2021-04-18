@@ -1,15 +1,8 @@
 import pygame as pg
 from pygame.locals import *
-import pygame.freetype
-import os
-
-
 
 class CEvent:
-    main_dir = os.path.split(os.path.abspath(__file__))[0]
-    fontname = os.path.join(main_dir, "data", "xirod.regular.ttf")
-    pg.freetype.init()
-    GAME_FONT = pygame.freetype.Font(fontname, 24)
+
     def __init__(self):
         pass
     def on_input_focus(self):
@@ -29,13 +22,13 @@ class CEvent:
     def on_mouse_wheel(self, event):
         pass
     def on_lbutton_up(self, event):
-        print(pygame.mouse.get_pos())
+        print(pg.mouse.get_pos())
     def on_lbutton_down(self, event):
         pass
     def on_rbutton_up(self, event):
         pass
-    def on_rbutton_down(self, event, screen, text_surface):
-        screen.blit(text_surface, pygame.mouse.get_pos())
+    def on_rbutton_down(self, event):
+        pass
     def on_mbutton_up(self, event):
         pass
     def on_mbutton_down(self, event):
@@ -99,7 +92,7 @@ class CEvent:
             elif event.button == 2:
                 self.on_mbutton_down(event)
             elif event.button == 3:
-                self.on_rbutton_down(event, screen, text_surface)
+                self.on_rbutton_down(event)
  
         elif event.type == ACTIVEEVENT:
             if event.state == 1:
