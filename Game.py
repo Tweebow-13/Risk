@@ -1,22 +1,12 @@
-from Land import Land
-from Territory import Territory
-from Player import Player
 from CApp import CApp
-import os
-
-Blue = Player("Blue")
-Red = Player("Red")
-Toulon = Territory("Toulon")
-Marseille = Territory("Marseille")
-Ollioules = Territory("Ollioules")
-Rouen = Territory("Rouen")
-Sanary = Territory("Sanary")
-Hyeres = Territory("Hyeres")
-Quincampoix = Territory("Quincampoix")
 
 if __name__ == "__main__" :
     theApp = CApp()
     theApp.on_execute()
+
+
+
+
 #game = Land([Toulon, Marseille, Ollioules, Rouen, Sanary, Hyeres], [Blue, Red], True, True)
 
 

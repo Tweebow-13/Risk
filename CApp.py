@@ -1,15 +1,20 @@
 import pygame as pg
 from pygame.locals import *
-import pygame.freetype
 import cevent
+import pygame.freetype
 import os
 
 from Territory import Territory
+from Land import Land
+from Player import Player
 
 # Define some colors
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
 RED   = (255,   0,   0)
+GREEN = (  0, 255,   0)
+BLUE  = (  0,   0, 200)
+GREY  = (204, 204, 204)
 
 # Define the territories and their attributes
 territories = ["Alaska", "Northwest_Territory", "Alberta" ,"Ontario", "Quebec", "Western_US", "Eastern_US", "Central_America", "Venezuela", "Perou", "Brazil", "Argentina", "Greenland", "Iceland", "Great_Britain", "Western_Europe", "Eastern_Europe", "Southern_Europe", "Scandinvia", "Ukraine", "Egypt", "North_Africa", "Congo", "East_Africa", "South_Africa", "Madagascar", "Middle_East", "Afghanistan", "Ural", "India", "Siberia", "Yakutsk", "Kamchatka", "Irkutsk", "Mongolia", "Japan", "China", "Siam", "Indonesia", "New_Guinea", "Western_Australia", "Eastern_Australia"]
@@ -21,6 +26,9 @@ fontname = os.path.join(main_dir, "data", "xirod.regular.ttf")
 pg.freetype.init()
 FONT_SIZE = 12
 GAME_FONT = pygame.freetype.Font(fontname, FONT_SIZE)
+imagename = os.path.join(main_dir, "data", "map.jpg")
+BACKGROUND = pg.image.load(imagename)
+BACKGROUND.set_colorkey(GREY)
 
 class CApp(cevent.CEvent):
     def __init__(self):
@@ -35,26 +43,63 @@ class CApp(cevent.CEvent):
         pg.init()
         self._display_surf = pg.display.set_mode(self.size, pg.RESIZABLE | pg.SCALED)
         #self._display_surf = pg.display.set_mode(self.size, pg.HWSURFACE | pg.DOUBLEBUF)
-        global main_dir
-        imagename = os.path.join(main_dir, "data", "map.jpg")
-        picture = pg.image.load(imagename)
-        #for grey in [(205,204,204),(205,205,204),(205,205,205),(206,205,204),(207,205,206),(204,204,204)]:
-        picture.set_colorkey((204,204,204))
-        picture = pg.transform.scale(picture, self.size)
-        picture = picture.convert()
+        global BACKGROUND
+        BACKGROUND = pg.transform.scale(BACKGROUND, self.size)
+        BACKGROUND = BACKGROUND.convert()
         self._display_surf.fill((150, 200, 255))
-        self._display_surf.blit(picture, [0, 0])
+        self._display_surf.blit(BACKGROUND, [0, 0])
         global territories
         global coords
         global sizes, FONT_SIZE
         for i in range(len(territories)):
             terr = territories[i]
             terr = Territory(terr, coords[i], sizes[i])
+            territories[i] = terr
             text_surface, rect = GAME_FONT.render(str(terr.get_army()), WHITE)
             self._display_surf.blit(text_surface, [terr.get_x() + (terr.get_size()[0] - FONT_SIZE)/2, terr.get_y() + (terr.get_size()[1] - FONT_SIZE)/2])
-            self.on_render(terr.get_rect())
-
+            # self.on_render(terr.get_rect())
+        self.on_render()
         self._running = True
+        self.on_setup()
+    
+    def on_setup(self):
+        global territories
+        Blue = Player("Blue", BLUE)
+        Red = Player("Red", RED)
+        players = [Blue, Red]
+        # /////////////////
+        randomTerr = False
+        randomArmies = True
+        # /////////////////
+        land = Land(territories, players, randomTerr, randomArmies)
+        self._display_surf.blit(BACKGROUND, [0, 0])
+        for i in range(land.get_nbTerritories()):
+            player = land.players[i%land.get_nbPlayers()]
+            if randomTerr:
+                land._setup_random_territories(player)
+            else:
+                terr = land._setup_territories(player)
+                text_surface, rect = GAME_FONT.render(str(terr.get_army()), WHITE)
+                self._display_surf.blit(text_surface, [terr.get_x() + (terr.get_size()[0] - FONT_SIZE)/2, terr.get_y() + (terr.get_size()[1] - FONT_SIZE)/2])
+                self.on_render()
+        print('\n',"////////////////////////////////////")
+        print("Territories ready",'\n','\n')
+        for i in range(land.get_nbTerritories(), land.get_players()[0].get_army()*land.get_nbPlayers()):
+            player = land.players[i%land.get_nbPlayers()]
+            if randomArmies:
+                land._setup_random_armies(player)
+            else:
+                terr = land._setup_armies(player)
+                text_surface, rect = GAME_FONT.render(str(terr.get_army()), WHITE)
+                self._display_surf.blit(text_surface, [terr.get_x() + (terr.get_size()[0] - FONT_SIZE)/2, terr.get_y() + (terr.get_size()[1] - FONT_SIZE)/2])
+                self.on_render()
+        print('\n',"////////////////////////////////////")
+        print("Armies ready",'\n')
+        print("Land ready for battle!",'\n')
+        # for terr in territories:
+        #     text_surface, rect = GAME_FONT.render(str(terr.get_army()), terr.get_ownership().get_color())
+        #     self._display_surf.blit(text_surface, [terr.get_x() + (terr.get_size()[0] - FONT_SIZE)/2, terr.get_y() + (terr.get_size()[1] - FONT_SIZE)/2])
+        self.on_render()
 
     def on_loop(self):
         pass
@@ -71,7 +116,7 @@ class CApp(cevent.CEvent):
  
         while( self._running ):
             for event in pg.event.get():
-                self.on_event(event, self._display_surf, text_surface)
+                self.on_event(event)
             self.on_loop()
             self.on_render()
 

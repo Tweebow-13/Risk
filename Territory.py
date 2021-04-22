@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.locals import *
-import pygame.freetype
-import os
+# import cevent
+# import os
 
 # Define some colors
 BLACK = (  0,   0,   0)
@@ -25,6 +25,7 @@ class Territory(pg.sprite.Sprite):
         self.size = inSize
         self.image = pg.Surface(inSize)
         self.rect = self.image.get_rect()
+        self.rect.topleft = inCoord
     
     def __str__(self):
         return(str(self.name) + " : " + str(self.army) + " units")
