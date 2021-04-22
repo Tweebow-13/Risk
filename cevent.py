@@ -22,7 +22,7 @@ class CEvent:
     def on_mouse_wheel(self, event):
         pass
     def on_lbutton_up(self, event):
-        print(pg.mouse.get_pos())
+        return pg.mouse.get_pos()
     def on_lbutton_down(self, event):
         pass
     def on_rbutton_up(self, event):
@@ -56,7 +56,7 @@ class CEvent:
     def on_joy_ball(self,event):
         pass
 
-    def on_event(self, event, screen, text_surface):
+    def on_event(self, event):
         if event.type == QUIT:
             self.on_exit()
  
@@ -80,7 +80,7 @@ class CEvent:
  
         elif event.type == MOUSEBUTTONUP:
             if event.button == 1:
-                self.on_lbutton_up(event)
+                return(self.on_lbutton_up(event))
             elif event.button == 2:
                 self.on_mbutton_up(event)
             elif event.button == 3:

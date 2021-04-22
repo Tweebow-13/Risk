@@ -1,25 +1,24 @@
 from Territory import Territory
 #from Land import Land
 import numpy as np
-#from np import random
 
 class Player:
 
-    def __init__(self, inColor, inArmy = 20):
+    def __init__(self, inName, inColor, inArmy = 40):
         self.army = inArmy
+        self.name = inName
         self.color = inColor
         self.territoriesCount = 0
 
     def __str__(self):
-        print(self.color)
-        return("")
+        # print(self.name)
+        return(self.name)
     
     def show_player(self, land):
         terrList = ""
         owned_terr = self.ownedTerrList(land)
         for i in range(len(owned_terr)):
             terrList += " | " + str(land.get_territories()[owned_terr[i][0]])
-        #print([terr for terr in terrList])
         print(self.color, "'s territories are :", terrList, '\n')
     
     def get_army(self):
