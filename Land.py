@@ -123,20 +123,27 @@ class Land(cevent.CEvent):
         return(terr)
     
     def _ownedTerr(self, player):
-        print("Please click on the territory you want to put a soldier in within the following list of your occupied ones:", '\n', player.ownedTerrList(self))
-        index = int(input())
+        print("Please click on the territory you want to put a soldier in within your owned ones:")
+        picking = True
         n = self.get_nbTerritories()
-        if (index < 0) or (index >= n):
-            while (index < 0) or (index >= n):
-                print("Please enter the index of the territory you want to put a soldier in within the following list of your occupied ones:", '\n', player.ownedTerrList(self))
-                index = int(input())
-                #n = len(slef.get_nbTerritories())
+        terr_rect_list = [terr.get_rect() for terr in self.get_territories()]
+        while picking:
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    self.on_exit()
+                    quit()
+                if event.type == MOUSEBUTTONUP:
+                    click = self.on_event(event)
+                    for i in range(len(terr_rect_list)):
+                        rect = terr_rect_list[i]
+                        if rect.collidepoint(click):
+                            picking = False
+                            index = i
         terr = self.get_territories()[index]
         if terr.get_ownership() == player:
             return terr
         else:
-            terr = self._ownedTerr(player)
-            return terr
+            return(self._ownedTerr(player))
     
     # def on_render(self, rect = None):
     #     pg.display.update(rect)
