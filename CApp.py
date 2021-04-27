@@ -30,9 +30,16 @@ GAME_FONT = pygame.freetype.Font(fontname, FONT_SIZE)
 imagename = os.path.join(main_dir, "data", "map.jpg")
 BACKGROUND = pg.image.load(imagename)
 BACKGROUND.set_colorkey(GREY)
-ATTACK_BUTTON, ATTACK_RECT = GAME_FONT.render("ATTACK", BLACK)
+
+attack_button, ATTACK_RECT = GAME_FONT.render("ATTACK", BLACK)
 attack_button_coords = [10, 310]
 ATTACK_RECT.topleft = attack_button_coords
+move_button, MOVE_RECT = GAME_FONT.render("MOVE", BLACK)
+move_button_coords = [10, 330]
+MOVE_RECT.topleft = move_button_coords
+end_turn_button, END_TURN_RECT = GAME_FONT.render("END TURN", BLACK)
+end_turn_button_coords = [10, 350]
+END_TURN_RECT.topleft = end_turn_button_coords
 
 
 class CApp(cevent.CEvent):
@@ -125,17 +132,22 @@ class CApp(cevent.CEvent):
         global land
         if self.on_init() == False:
             self._running = False
-        global GAME_FONT, ATTACK_RECT, ATTACK_BUTTON
+        # global GAME_FONT, ATTACK_RECT, attack_button, MOVE_RECT
  
         while( self._running ):
             for player in land.get_players():
-                self._display_surf.blit(ATTACK_BUTTON, attack_button_coords)
-                self.on_render(ATTACK_RECT)
+                self._display_surf.blit(attack_button, attack_button_coords)
+                self._display_surf.blit(move_button, move_button_coords)
+                self._display_surf.blit(end_turn_button, end_turn_button_coords)
+                self.on_render([ATTACK_RECT, MOVE_RECT, END_TURN_RECT])
                 on_turn = True
                 for i in range(3):
                     print("Player", player, "has", 3-i, "soldiers to place.")
                     terr = land._setup_armies(player)
                     self.on_display()
+                
+                can_attack = True
+                can_move = True
                 while on_turn:
                     for event in pg.event.get():
                         if event.type == QUIT:
@@ -144,9 +156,20 @@ class CApp(cevent.CEvent):
                         elif (event.type == MOUSEBUTTONUP) and (event.button == 1):
                             click = self.on_event(event)
                             if ATTACK_RECT.collidepoint(click):
-                                print("Let's attack!")
-                                land.attack(player)
-                                self.on_display()
+                                if can_attack:
+                                    print("Let's attack!")
+                                    land.attack(player)
+                                    self.on_display()
+                                else: print("You can't attack anymore")
+                            elif MOVE_RECT.collidepoint(click):
+                                if can_move:
+                                    print("Let's move some troops!")
+                                    land.move(player)
+                                    can_attack = False
+                                    can_move = False
+                                    self.on_display()
+                                else: print("You can't move troops anymore")
+                            elif END_TURN_RECT.collidepoint(click):
                                 on_turn = False
                 self.on_loop()
                 self.on_render()
