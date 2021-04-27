@@ -197,6 +197,45 @@ class Land(cevent.CEvent):
             terr1.set_army(terr1.get_army() - battle[3])
             terr2.set_army(terr2.get_army() - battle[4])
             print("The defender held his position loosing", battle[4], "soldiers.", '\n')
+    def move(self, player):
+        terr_rect_list = [terr.get_rect() for terr in self.get_territories()]
+        picking = True
+        click1 = None
+        click2 = None
+        while picking:
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    self.on_exit()
+                    quit()
+                if (event.type == MOUSEBUTTONUP) and (event.button == 1):
+                    if click1 == None:
+                        click1 = self.on_event(event)
+                        for i in range(len(terr_rect_list)):
+                            rect = terr_rect_list[i]
+                            if rect.collidepoint(click1):
+                                index = i
+                                terr1 = self.get_territories()[index]
+                                if terr1.get_ownership() != player:
+                                    print("This is not your territory", '\n', "Can't move troops from here")
+                                    self.move(player)
+                                elif terr1.get_army() < 2:
+                                    print("Too few soldiers on this territory.", '\n', "Can't move troops from here")
+                                    self.move(player)
+                    else:
+                        click2 = self.on_event(event)
+                        for i in range(len(terr_rect_list)):
+                            rect = terr_rect_list[i]
+                            if rect.collidepoint(click2):
+                                index = i
+                                terr2 = self.get_territories()[index]
+                                if terr2.get_ownership() != player:
+                                    print("This is not your territory", '\n', "Can't move troops there")
+                                    self.move(player)
+                        picking = False
+        
+        terr1.set_army(terr1.get_army() - 1)
+        terr2.set_army(terr2.get_army() + 1)
+        print("The troops traveled well to", terr2.get_name())
 
     # def on_render(self, rect = None):
     #     pg.display.update(rect)

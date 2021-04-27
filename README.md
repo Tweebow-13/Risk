@@ -5,8 +5,6 @@ Site for borders : https://gamedev.stackexchange.com/questions/96612/how-can-i-e
 
 ## To do:
 - create a menu to init the setup choices
-- create an interface to choose which action the player wants to take
-- implement the attack
 - implement the troops movement
 - add the continent bonuses
 - add cards ?
@@ -15,3 +13,4 @@ Site for borders : https://gamedev.stackexchange.com/questions/96612/how-can-i-e
 - update only the changed territories (issue was to fill the background or erase the previous text)
 - Define the borders of the territories :
     https://stackoverflow.com/questions/62708039/drawing-polygons-onto-a-sprites-surface-as-its-image-in-pygame
+- print the territories names without "_"
