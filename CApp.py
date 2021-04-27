@@ -30,6 +30,10 @@ GAME_FONT = pygame.freetype.Font(fontname, FONT_SIZE)
 imagename = os.path.join(main_dir, "data", "map.jpg")
 BACKGROUND = pg.image.load(imagename)
 BACKGROUND.set_colorkey(GREY)
+ATTACK_BUTTON, ATTACK_RECT = GAME_FONT.render("ATTACK", BLACK)
+attack_button_coords = [10, 310]
+ATTACK_RECT.topleft = attack_button_coords
+
 
 class CApp(cevent.CEvent):
     def __init__(self):
@@ -84,7 +88,6 @@ class CApp(cevent.CEvent):
                 text_surface, rect = GAME_FONT.render(str(terr.get_army()), terr.get_ownership().get_color())
                 self._display_surf.blit(text_surface, [terr.get_x() + (terr.get_size()[0] - FONT_SIZE)/2, terr.get_y() + (terr.get_size()[1] - FONT_SIZE)/2])
                 self.on_render()
-                # self.on_display()
         print('\n',"////////////////////////////////////")
         print("Territories ready",'\n','\n')
 
@@ -97,16 +100,10 @@ class CApp(cevent.CEvent):
             for i in range(land.get_nbTerritories(), land.get_players()[0].get_army()*land.get_nbPlayers()):
                 player = land.players[i%land.get_nbPlayers()]
                 terr = land._setup_armies(player)
-                # text_surface, rect = GAME_FONT.render(str(terr.get_army()), terr.get_ownership().get_color())
-                # self._display_surf.blit(text_surface, [terr.get_x() + (terr.get_size()[0] - FONT_SIZE)/2, terr.get_y() + (terr.get_size()[1] - FONT_SIZE)/2])
-                # self.on_render()
                 self.on_display()
         print('\n',"////////////////////////////////////")
         print("Armies ready",'\n')
         print("Land ready for battle!",'\n')
-        # for terr in territories:
-        #     text_surface, rect = GAME_FONT.render(str(terr.get_army()), terr.get_ownership().get_color())
-        #     self._display_surf.blit(text_surface, [terr.get_x() + (terr.get_size()[0] - FONT_SIZE)/2, terr.get_y() + (terr.get_size()[1] - FONT_SIZE)/2])
         self.on_render()
 
     def on_loop(self):
@@ -128,17 +125,29 @@ class CApp(cevent.CEvent):
         global land
         if self.on_init() == False:
             self._running = False
-        global GAME_FONT
-        text_surface, rect = GAME_FONT.render("1,2,3,4,5,6,7,8,9,10", WHITE)
+        global GAME_FONT, ATTACK_RECT, ATTACK_BUTTON
  
         while( self._running ):
             for player in land.get_players():
+                self._display_surf.blit(ATTACK_BUTTON, attack_button_coords)
+                self.on_render(ATTACK_RECT)
+                on_turn = True
                 for i in range(3):
-                    print("Player", player, "has", 3-i, "soldiers to place.  Click on the territory you want to place 1 soldier")
-                    land._setup_armies(player)
+                    print("Player", player, "has", 3-i, "soldiers to place.")
+                    terr = land._setup_armies(player)
                     self.on_display()
-                for event in pg.event.get():
-                    self.on_event(event)
+                while on_turn:
+                    for event in pg.event.get():
+                        if event.type == QUIT:
+                            self.on_exit()
+                            quit()
+                        elif (event.type == MOUSEBUTTONUP) and (event.button == 1):
+                            click = self.on_event(event)
+                            if ATTACK_RECT.collidepoint(click):
+                                print("Let's attack!")
+                                land.attack(player)
+                                self.on_display()
+                                on_turn = False
                 self.on_loop()
                 self.on_render()
 

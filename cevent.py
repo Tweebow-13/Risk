@@ -28,7 +28,7 @@ class CEvent:
     def on_rbutton_up(self, event):
         pass
     def on_rbutton_down(self, event):
-        pass
+        print(pg.mouse.get_pos())
     def on_mbutton_up(self, event):
         pass
     def on_mbutton_down(self, event):
