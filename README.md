@@ -11,5 +11,7 @@ Site for borders : https://gamedev.stackexchange.com/questions/96612/how-can-i-e
 - add the continent bonuses
 - add cards ?
 
-## Améliorations:
+## Improvements:
 - update only the changed territories (issue was to fill the background or erase the previous text)
+- Define the borders of the territories :
+    https://stackoverflow.com/questions/62708039/drawing-polygons-onto-a-sprites-surface-as-its-image-in-pygame

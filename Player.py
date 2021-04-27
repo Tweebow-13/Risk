@@ -19,11 +19,14 @@ class Player:
         owned_terr = self.ownedTerrList(land)
         for i in range(len(owned_terr)):
             terrList += " | " + str(land.get_territories()[owned_terr[i][0]])
-        print(self.color, "'s territories are :", terrList, '\n')
+        print(self.name, "'s territories are :", terrList, '\n')
     
     def get_army(self):
         return self.army
 
+    def get_name(self):
+        return self.name
+    
     def get_color(self):
         return self.color
     
@@ -50,27 +53,41 @@ class Player:
                 owned.append([i, terr.get_name()])
         return owned
     
-    def attack(self, terr1, terr2, till_end = True):
-        if terr2.ownership == self:
-            print("You already own this territory", '\n', "Can't attack")
-        elif terr1.army < 2:
-            print("Too few soldiers on this territory.", '\n', "Can't attack")
-        else:
-            battle = self._battle(terr1.get_army(), terr2.get_army(), till_end)
-            terr2.get_ownership().set_army(terr2.get_ownership().get_army() - battle[4])
-            self.set_army(self.get_army() - battle[3])
-            print("Battle finished")
-            if battle[0]:
-                terr2.get_ownership().set_territoriesCount(terr2.get_ownership().get_territoriesCount() - 1)
-                terr2.set_ownership(self)
-                self.set_territoriesCount(self.get_territoriesCount() + 1)
-                print(self.get_color(), "took ownership of", terr2.get_name(), "loosing", battle[3], "soldiers.")
-            else:
-                print("The defender held his position loosing", battle[4], "soldiers.")
+    # def attack(self, land, terr1, terr2, till_end = True):
+    #     terr_rect_list = [terr.get_rect() for terr in land.get_territories()]
+    #     on_turn = True
+    #     click1 = None
+    #     click2 = None
+    #     while on_turn:
+    #         for event in pg.event.get():
+    #             if event.type == QUIT:
+    #                 self.on_exit()
+    #                 quit()
+    #             if (event.type == MOUSEBUTTONUP) and (event.button == 1):
+    #                 if click1 == None:
+    #                     click1 = self.on_event(event)
+    #                 else : click2 = self.on_event(event)
+
+    #     if terr2.ownership == self:
+    #         print("You already own this territory", '\n', "Can't attack")
+    #     elif terr1.army < 2:
+    #         print("Too few soldiers on this territory.", '\n', "Can't attack")
+    #     else:
+    #         battle = self._battle(terr1.get_army(), terr2.get_army(), till_end)
+    #         terr2.get_ownership().set_army(terr2.get_ownership().get_army() - battle[4])
+    #         self.set_army(self.get_army() - battle[3])
+    #         print("Battle finished")
+    #         if battle[0]:
+    #             terr2.get_ownership().set_territoriesCount(terr2.get_ownership().get_territoriesCount() - 1)
+    #             terr2.set_ownership(self)
+    #             self.set_territoriesCount(self.get_territoriesCount() + 1)
+    #             print(self.get_color(), "took ownership of", terr2.get_name(), "loosing", battle[3], "soldiers.")
+    #         else:
+    #             print("The defender held his position loosing", battle[4], "soldiers.")
         
             
     
-    def _battle(self, attacker, defender, till_end):
+    def battle(self, attacker, defender, till_end):
         aLoss = 0
         dLoss = 0
         if till_end:
